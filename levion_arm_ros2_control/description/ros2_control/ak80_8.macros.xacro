@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="ak80_8_ros2_control" params="joint_name can_id pos_min:=0.349 pos_max:=2.615 vel_limit:=10 effort_limit:=10 enc_off:=0">
+  <xacro:macro name="ak80_8_ros2_control" params="joint_name can_id pos_min:=0.349 pos_max:=2.615 vel_limit:=10 acc_limit:=10 effort_limit:=10 enc_off:=0 imp_kp:='' imp_kd:=0">
     
     <joint name="${joint_name}">
       <!-- ros2 control basic setting -->
@@ -29,11 +29,20 @@
       <param name="pole_pairs">21</param>
       <param name="gear_ratio">8</param>
       <param name="kt">0.199</param>
+      <param name="vel_limit">${vel_limit}</param>
+      <param name="acc_limit">${acc_limit}</param>
 
       <!-- levion arm settings -->
       <param name="pos_limit_min">${pos_min}</param>
       <param name="pos_limit_max">${pos_max}</param>
       <param name="enc_off">${enc_off}</param>
+
+      <!-- host-side impedance: set imp_kp (and optionally imp_kd) to realize the
+           position command interface as an impedance law over the current loop -->
+      <xacro:if value="${imp_kp != ''}">
+        <param name="imp_kp">${imp_kp}</param>
+        <param name="imp_kd">${imp_kd}</param>
+      </xacro:if>
     </joint>
   </xacro:macro>
 </robot>

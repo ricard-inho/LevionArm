@@ -9,21 +9,21 @@
   <xacro:if value="${left_right == 'left'}">
     <xacro:property name="lr_shoulder_lower" default="${left_shoulder_lower}" />
     <xacro:property name="lr_shoulder_upper" default="${left_shoulder_upper}" />
-    <xacro:property name="lr_shoulder_vel" default="${left_shoulder_velocity_limit}" />
+    <xacro:property name="lr_shoulder_vel" default="${left_shoulder_urdf_velocity_limit}" />
     <xacro:property name="lr_shoulder_effort" default="${left_shoulder_effort_limit}" />
     <xacro:property name="lr_elbow_lower" default="${left_elbow_lower}" />
     <xacro:property name="lr_elbow_upper" default="${left_elbow_upper}" />
-    <xacro:property name="lr_elbow_vel" default="${left_elbow_velocity_limit}" />
+    <xacro:property name="lr_elbow_vel" default="${left_elbow_urdf_velocity_limit}" />
     <xacro:property name="lr_elbow_effort" default="${left_elbow_effort_limit}" />
   </xacro:if>
   <xacro:if value="${left_right == 'right'}">
     <xacro:property name="lr_shoulder_lower" default="${right_shoulder_lower}" />
     <xacro:property name="lr_shoulder_upper" default="${right_shoulder_upper}" />
-    <xacro:property name="lr_shoulder_vel" default="${right_shoulder_velocity_limit}" />
+    <xacro:property name="lr_shoulder_vel" default="${right_shoulder_urdf_velocity_limit}" />
     <xacro:property name="lr_shoulder_effort" default="${right_shoulder_effort_limit}" />
     <xacro:property name="lr_elbow_lower" default="${right_elbow_lower}" />
     <xacro:property name="lr_elbow_upper" default="${right_elbow_upper}" />
-    <xacro:property name="lr_elbow_vel" default="${right_elbow_velocity_limit}" />
+    <xacro:property name="lr_elbow_vel" default="${right_elbow_urdf_velocity_limit}" />
     <xacro:property name="lr_elbow_effort" default="${right_elbow_effort_limit}" />
   </xacro:if>
 

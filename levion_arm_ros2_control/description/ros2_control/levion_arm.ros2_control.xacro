@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-<xacro:macro name="levion_system" params="name prefix left_arm:=true right_arm:=false hw_plugin:='real'"> <!-- real/mujoco-->
+<xacro:macro name="levion_system" params="name prefix left_arm:=true right_arm:=false left_shoulder:=true left_elbow:=true right_shoulder:=true right_elbow:=true hw_plugin:='real'"> <!-- real/rsl_servo/mujoco/gazebo -->
 
 <!-- include macros -->
 <xacro:include filename="$(find levion_arm_ros2_control)/ros2_control/ak80_8.macros.xacro"/>
+<xacro:include filename="$(find cubemars_servo_hardware)/ros2_control/ak80_8_servo.macros.xacro"/>
 
 <xacro:include filename="$(find levion_arm_ros2_control)/config/levion.property.xacro"/>
 
@@ -12,6 +13,12 @@
   <xacro:if value="${hw_plugin == 'real'}">
     <hardware>
       <plugin>cubemars_hardware/CubeMarsSystemHardware</plugin>
+      <param name="can_interface">can0</param>
+    </hardware>
+  </xacro:if>
+  <xacro:if value="${hw_plugin == 'rsl_servo'}">
+    <hardware>
+      <plugin>cubemars_servo_hardware/ServoHardwareInterface</plugin>
       <param name="can_interface">can0</param>
     </hardware>
   </xacro:if>
@@ -27,47 +34,123 @@
   </xacro:if>
 
   <!-- Left arm -->
-  <xacro:if value="${left_arm}">
+  <xacro:if value="${left_arm and hw_plugin != 'rsl_servo'}">
 
+    <xacro:if value="${left_shoulder}">
     <xacro:ak80_8_ros2_control
       joint_name="${prefix}left_shoulder_joint"
-      can_id="104"
+      can_id="204"
       pos_min="${left_shoulder_lower}"
       pos_max="${left_shoulder_upper}"
       vel_limit="${left_shoulder_velocity_limit}"
+      acc_limit="${left_shoulder_acceleration_limit}"
       effort_limit="${left_shoulder_effort_limit}"
-      enc_off="${left_shoulder_enc_offset}"/>
+      enc_off="${left_shoulder_enc_offset}"
+      imp_kp="2.0"
+      imp_kd="0.9"/>
+    </xacro:if>
 
+    <xacro:if value="${left_elbow}">
     <xacro:ak80_8_ros2_control
       joint_name="${prefix}left_elbow_joint"
       can_id="105"
       pos_min="${left_elbow_lower}"
       pos_max="${left_elbow_upper}"
       vel_limit="${left_elbow_velocity_limit}"
+      acc_limit="${left_elbow_acceleration_limit}"
+      effort_limit="${left_elbow_effort_limit}"
+      enc_off="${left_elbow_enc_offset}"
+      imp_kp="2.0"
+      imp_kd="0.9"/>
+    </xacro:if>
+  </xacro:if>
+
+  <!-- Left arm (RSL servo drivers; vel/acc properties are value/10 = rad/s) -->
+  <xacro:if value="${left_arm and hw_plugin == 'rsl_servo'}">
+
+    <xacro:if value="${left_shoulder}">
+    <xacro:ak80_8_servo_ros2_control
+      joint_name="${prefix}left_shoulder_joint"
+      can_id="204"
+      pos_min="${left_shoulder_lower}"
+      pos_max="${left_shoulder_upper}"
+      vel_limit="${left_shoulder_velocity_limit/10}"
+      acc_limit="${left_shoulder_acceleration_limit/10}"
+      effort_limit="${left_shoulder_effort_limit}"
+      enc_off="${left_shoulder_enc_offset}"/>
+    </xacro:if>
+
+    <xacro:if value="${left_elbow}">
+    <xacro:ak80_8_servo_ros2_control
+      joint_name="${prefix}left_elbow_joint"
+      can_id="105"
+      pos_min="${left_elbow_lower}"
+      pos_max="${left_elbow_upper}"
+      vel_limit="${left_elbow_velocity_limit/10}"
+      acc_limit="${left_elbow_acceleration_limit/10}"
       effort_limit="${left_elbow_effort_limit}"
       enc_off="${left_elbow_enc_offset}"/>
+    </xacro:if>
   </xacro:if>
 
   <!-- Right arm -->
-  <xacro:if value="${right_arm}">
+  <xacro:if value="${right_arm and hw_plugin != 'rsl_servo'}">
 
+    <xacro:if value="${right_shoulder}">
     <xacro:ak80_8_ros2_control
       joint_name="${prefix}right_shoulder_joint"
-      can_id="204"
+      can_id="104"
       pos_min="${right_shoulder_lower}"
       pos_max="${right_shoulder_upper}"
       vel_limit="${right_shoulder_velocity_limit}"
+      acc_limit="${right_shoulder_acceleration_limit}"
       effort_limit="${right_shoulder_effort_limit}"
-      enc_off="${right_shoulder_enc_offset}"/>
+      enc_off="${right_shoulder_enc_offset}"
+      imp_kp="1.0"
+      imp_kd="0.1"/>
+    </xacro:if>
 
+    <xacro:if value="${right_elbow}">
     <xacro:ak80_8_ros2_control
       joint_name="${prefix}right_elbow_joint"
       can_id="205"
       pos_min="${right_elbow_lower}"
       pos_max="${right_elbow_upper}"
       vel_limit="${right_elbow_velocity_limit}"
+      acc_limit="${right_elbow_acceleration_limit}"
+      effort_limit="${right_elbow_effort_limit}"
+      enc_off="${right_elbow_enc_offset}"
+      imp_kp="2.0"
+      imp_kd="0.9"/>
+    </xacro:if>
+  </xacro:if>
+
+  <!-- Right arm (RSL servo drivers; vel/acc properties are value/10 = rad/s) -->
+  <xacro:if value="${right_arm and hw_plugin == 'rsl_servo'}">
+
+    <xacro:if value="${right_shoulder}">
+    <xacro:ak80_8_servo_ros2_control
+      joint_name="${prefix}right_shoulder_joint"
+      can_id="104"
+      pos_min="${right_shoulder_lower}"
+      pos_max="${right_shoulder_upper}"
+      vel_limit="${right_shoulder_velocity_limit/10}"
+      acc_limit="${right_shoulder_acceleration_limit/10}"
+      effort_limit="${right_shoulder_effort_limit}"
+      enc_off="${right_shoulder_enc_offset}"/>
+    </xacro:if>
+
+    <xacro:if value="${right_elbow}">
+    <xacro:ak80_8_servo_ros2_control
+      joint_name="${prefix}right_elbow_joint"
+      can_id="205"
+      pos_min="${right_elbow_lower}"
+      pos_max="${right_elbow_upper}"
+      vel_limit="${right_elbow_velocity_limit/10}"
+      acc_limit="${right_elbow_acceleration_limit/10}"
       effort_limit="${right_elbow_effort_limit}"
       enc_off="${right_elbow_enc_offset}"/>
+    </xacro:if>
   </xacro:if>
 
 </ros2_control>
