@@ -23,8 +23,12 @@
   <xacro:property name="shoulder_lower" value="-${default_joint_position_limit}"/>
   <xacro:property name="shoulder_upper" value="${default_joint_position_limit}"/>
   <xacro:property name="shoulder_enc_offset" value="0"/>
-  <xacro:property name="elbow_lower" value="${-2.615+SAFETY_OFFSET}"/>
-  <xacro:property name="elbow_upper" value="${-0.349-SAFETY_OFFSET}"/>
+  <!-- Elbow position limits (rad). Left and right arms are physically different,
+       so each side has its own measured range. -->
+  <xacro:property name="left_elbow_lower_limit"  value="${-3.4+SAFETY_OFFSET}"/>
+  <xacro:property name="left_elbow_upper_limit"  value="${-1.2-SAFETY_OFFSET}"/>
+  <xacro:property name="right_elbow_lower_limit" value="${1.5+SAFETY_OFFSET}"/>
+  <xacro:property name="right_elbow_upper_limit" value="${3.7-SAFETY_OFFSET}"/>
   <xacro:property name="elbow_enc_offset" value="0.349"/>
 
   <!-- Left joints -->
@@ -35,8 +39,8 @@
   <xacro:property name="left_shoulder_acceleration_limit" value="${default_joint_acceleration_limit}"/>
   <xacro:property name="left_shoulder_effort_limit" value="${default_joint_effort_limit}"/>
   <xacro:property name="left_shoulder_enc_offset" value="${shoulder_enc_offset}"/>
-  <xacro:property name="left_elbow_lower" value="${elbow_lower}"/>
-  <xacro:property name="left_elbow_upper" value="${elbow_upper}"/>
+  <xacro:property name="left_elbow_lower" value="${left_elbow_lower_limit}"/>
+  <xacro:property name="left_elbow_upper" value="${left_elbow_upper_limit}"/>
   <xacro:property name="left_elbow_velocity_limit" value="${default_joint_velocity_limit}"/>
   <xacro:property name="left_elbow_urdf_velocity_limit" value="${default_joint_urdf_velocity_limit}"/>
   <xacro:property name="left_elbow_acceleration_limit" value="${default_joint_acceleration_limit}"/>
@@ -51,8 +55,9 @@
   <xacro:property name="right_shoulder_acceleration_limit" value="${default_joint_acceleration_limit}"/>
   <xacro:property name="right_shoulder_effort_limit" value="${default_joint_effort_limit}"/>
   <xacro:property name="right_shoulder_enc_offset" value="${-shoulder_enc_offset}"/>
-  <xacro:property name="right_elbow_lower" value="${-elbow_upper}"/>
-  <xacro:property name="right_elbow_upper" value="${-elbow_lower}"/>
+  <!-- Right elbow uses its own measured range (not mirrored from the left) -->
+  <xacro:property name="right_elbow_lower" value="${right_elbow_lower_limit}"/>
+  <xacro:property name="right_elbow_upper" value="${right_elbow_upper_limit}"/>
   <xacro:property name="right_elbow_velocity_limit" value="${default_joint_velocity_limit}"/>
   <xacro:property name="right_elbow_urdf_velocity_limit" value="${default_joint_urdf_velocity_limit}"/>
   <xacro:property name="right_elbow_acceleration_limit" value="${default_joint_acceleration_limit}"/>

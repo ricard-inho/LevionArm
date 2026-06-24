@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="ak80_8_ros2_control" params="joint_name can_id pos_min:=0.349 pos_max:=2.615 vel_limit:=10 acc_limit:=10 effort_limit:=10 enc_off:=0 imp_kp:='' imp_kd:=0">
+  <xacro:macro name="ak80_8_ros2_control" params="joint_name can_id pos_min:=0.349 pos_max:=2.615 vel_limit:=10 acc_limit:=10 effort_limit:=10 enc_off:=0 imp_kp:='' imp_kd:=0 use_speed_loop:=true">
     
     <joint name="${joint_name}">
       <!-- ros2 control basic setting -->
@@ -29,8 +29,15 @@
       <param name="pole_pairs">21</param>
       <param name="gear_ratio">8</param>
       <param name="kt">0.199</param>
-      <param name="vel_limit">${vel_limit}</param>
-      <param name="acc_limit">${acc_limit}</param>
+      <!-- Setting BOTH vel_limit and acc_limit selects Position-Speed Loop (servo mode 6),
+           where the motor runs its own trapezoidal planner to each target. That fights a
+           joint_trajectory_controller streaming setpoints (oscillation). Set
+           use_speed_loop=false to omit them and use plain Position Loop (mode 4), which
+           tracks streamed setpoints smoothly. (Ignored when imp_kp is set -> impedance.) -->
+      <xacro:if value="${use_speed_loop}">
+        <param name="vel_limit">${vel_limit}</param>
+        <param name="acc_limit">${acc_limit}</param>
+      </xacro:if>
 
       <!-- levion arm settings -->
       <param name="pos_limit_min">${pos_min}</param>
