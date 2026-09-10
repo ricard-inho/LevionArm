@@ -53,8 +53,8 @@
       acc_limit="${left_elbow_acceleration_limit}"
       effort_limit="${left_elbow_effort_limit}"
       enc_off="${left_elbow_enc_offset}"
-      imp_kp="0.5"
-      imp_kd="0.05"/>
+      imp_kp="1.0"
+      imp_kd="0.1"/>
     </xacro:if>
   </xacro:if>
 
@@ -86,8 +86,8 @@
       effort_limit="${right_elbow_effort_limit}"
       enc_off="${right_elbow_enc_offset}"
       use_speed_loop="false"
-      imp_kp="0.5"
-      imp_kd="0.05"/>
+      imp_kp="1.0"
+      imp_kd="0.1"/>
     </xacro:if>
   </xacro:if>
 
